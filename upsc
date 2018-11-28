@@ -1,0 +1,36 @@
+#1-predicting result
+dta<-read.csv("cap.csv",stringsAsFactors = FALSE)
+str(dta)
+summary(dta)
+dta$result<-as.factor(dta$result)
+samp<-sample(373,320)
+dta_train<-dta[samp,]
+dta_test<-dta[-samp,]
+str(dta_test)
+table(dta_train$result)
+table(dta_test$result)
+library(kernlab)
+dta_classifier <- ksvm(result ~ test1+test2+test3, data = dta_train,kernel = "rbfdot")
+dta_classifier
+dta_predictions <- predict(dta_classifier, dta_test)
+table(dta_predictions, dta_test$result)
+#2-
+  cap<-read.csv("cap.csv",stringsAsFactors = FALSE)
+str(cap)
+summary(cap)
+cap$City<-as.factor(cap$City)
+cap$Guardian.Occupation<-as.factor(cap$Guardian.Occupation)
+cap$Graduation.subject<-as.factor(cap$Graduation.subject)
+cap$X12th.Stream<-as.factor(cap$X12th.Stream)
+
+counts <- table(cap$City)
+barplot(counts, main="Cities Chart", xlab="Cities",cex.names=0.5)
+barplot(table(cap$Guardian.Occupation),main="Occupation Chart", xlab="Guardian Occupation")
+
+barplot(table(cap$X12th.Stream), main="Which Stream Students are interested most?", xlab="Fields")
+
+z<-as.data.frame(table(cap$Age),stringsAsFactors = FALSE)
+z$Var1<-as.integer(z$Var1)
+Groups <- cut(x=z$Var1, breaks=seq(from=19, to=max(z$Var1), by = 5))
+Bygroup = tapply(z$Freq, Groups, sum)
+barplot(height = Bygroup, xlab = "Age", ylab = "occurence")
